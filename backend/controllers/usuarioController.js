@@ -1,5 +1,6 @@
 import Usuario from "../models/Usuarios.js";
 import generarId from "../helpers/generarId.js";
+import generarJWT from "../helpers/generarJWT.js";
 
 const registrar = async (req, res) => {
     //Evitar registro duplicado
@@ -35,15 +36,16 @@ const autenticar = async (req, res) => {
 
   //Comprobar si el usuario esta confirmado
    if (!usuario.confirmado) {
-     const error = new Error("El email no ha sido confirmado");
+     const error = new Error("El email no ha sido verificado");
      return res.status(403).json({ msg: error.message });
    }
   //Comprobar el password
   if(await usuario.comprobarPassword(password)){
     res.json({
-        id: usuario.id,
+        _id: usuario._id,
         nombre: usuario.nombre,
-        email: usuario.email 
+        email: usuario.email,
+        token: generarJWT(usuario._id)
     })
   } else {
     const error = new Error("Contraseña incorrecta");
@@ -51,4 +53,22 @@ const autenticar = async (req, res) => {
   }
 }
 
-export { registrar, autenticar };
+const confirmar = async (req, res) => {
+    const {token} = req.params;
+    const usuarioConfirmar = await Usuario.findOne({token});
+    if(!usuarioConfirmar) {
+        const error = new Error("Token no valido");
+        return res.status(403).json({ msg: error.message });
+    }
+
+    try {
+        usuarioConfirmar.confirmado = true;
+        usuarioConfirmar.token = '';
+        await usuarioConfirmar.save();
+        res.json({msg: "Verificación exitosa"})
+    } catch (error) {
+        
+    }
+}
+
+export { registrar, autenticar, confirmar };
