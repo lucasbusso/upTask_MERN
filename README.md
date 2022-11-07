@@ -1,3 +1,3 @@
 # upTask_MERN
 
-App developer using MERN stack and MVC architecture.
+App developed using MERN stack and MVC arch.
