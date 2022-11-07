@@ -3,12 +3,12 @@ import mongoose from "mongoose";
 const usuarioSchema = mongoose.Schema(
     {
         nombre: {
-            type: required,
+            required: true,
             type: String,
             trim: true,
         },
         password: {
-            type: required,
+            required: true,
             type: String,
             trim: true,
         },
