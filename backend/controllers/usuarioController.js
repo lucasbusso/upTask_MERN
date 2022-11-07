@@ -1,4 +1,5 @@
 import Usuario from "../models/Usuarios.js";
+import generarId from "../helpers/generarId.js";
 
 const registrar = async (req, res) => {
     //Evitar registro duplicado
@@ -12,6 +13,7 @@ const registrar = async (req, res) => {
     }
     try {
         const usuario = new Usuario(req.body);
+        usuario.token = generarId();
         const usuarioAlmacenado = await usuario.save(); 
         res.json(usuarioAlmacenado);
 
