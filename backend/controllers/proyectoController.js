@@ -31,7 +31,6 @@ const obtenerProyecto = async (req, res) => {
     const error = new Error("No tienes permisos en este proyecto");
     return res.status(403).json({ msg: error.message });
   }
-   
   res.json(proyecto);
 };
 
@@ -62,7 +61,27 @@ const editarProyecto = async (req, res) => {
   }
 };
 
-const eliminarProyecto = async (req, res) => {};
+const eliminarProyecto = async (req, res) => {
+  const { id } = req.params;
+  const proyecto = await Proyecto.findById(id);
+
+  if(!proyecto) {
+    const error = new Error("Proyecto no encontrado");
+    return res.status(403).json({ msg: error.message });
+  }
+
+  if (proyecto.creador.toString() !== req.usuario._id.toString()){
+    const error = new Error("No tienes permisos en este proyecto");
+    return res.status(403).json({ msg: error.message });
+  }
+
+  try {
+    await proyecto.deleteOne();
+    res.json({ msg: "Proyecto eliminado" })
+  } catch (error) {
+    console.log(error)
+  }
+};
 
 const agregarColaborador = async (req, res) => {};
 
