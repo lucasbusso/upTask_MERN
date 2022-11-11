@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 const Login = () => {
   return (
     <>
-      <h1 className="text-sky-600 font-black text-6xl">
-        Sing in and admin your <span className="text-slate-700"> projects</span>
+      <h1 className="text-sky-600 font-black text-4xl">
+        Manage your <span className="text-slate-700"> projects</span>
       </h1>
       <form className="my-10 bg-white rounded-md shadow-lg p-10">
         <div className="my-5">
@@ -32,7 +32,7 @@ const Login = () => {
             type="password"
             id="password"
             placeholder="Enter your password"
-            className="w-full mt-3p-3 border rounded-xl bg-gray-50"
+            className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
           />
         </div>
 
