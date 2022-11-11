@@ -1,6 +1,7 @@
 import Usuario from "../models/Usuarios.js";
 import generarId from "../helpers/generarId.js";
 import generarJWT from "../helpers/generarJWT.js";
+import { registerEmail } from "../helpers/email.js";
 
 const registrar = async (req, res) => {
   const { email } = req.body; //para extraer valores de un formulario es con req.body
@@ -17,6 +18,14 @@ const registrar = async (req, res) => {
     const usuario = new Usuario(req.body);
     usuario.token = generarId();
     await usuario.save();
+
+    //Enviar email de confirmacion
+    registerEmail({
+      email: usuario.email,
+      name: usuario.name,
+      token: usuario.token
+    })
+
     res.json({ msg: "User created, we sent you an email with a verification link"});
   } catch (error) {
     console.log(error);
