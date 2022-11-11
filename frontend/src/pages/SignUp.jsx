@@ -42,13 +42,16 @@ const SignUp = () => {
 
     //Crear usuario en la API
     try {
-      const { data } = await axios.post('http://localhost:4000/api/usuarios', 
+      const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/usuarios`, 
       {name, email, password});
-
       setAlerta({
         msg: data.msg,
         error: false
       })
+      setName('');
+      setEmail('');
+      setPassword('');
+      setRepeatPassword('');
     } catch (error) {
       setAlerta({
         msg: error.response.data.msg,
