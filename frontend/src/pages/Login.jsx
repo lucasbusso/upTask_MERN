@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 const Login = () => {
+
   return (
     <>
       <h1 className="text-sky-600 text-center font-black text-4xl">

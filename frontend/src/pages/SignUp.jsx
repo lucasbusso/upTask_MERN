@@ -1,12 +1,57 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
-const Register = () => {
+import Alerta from "../components/Alerta";
+
+const SignUp = () => {
+  const [nombre, setNombre] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [repeatPassword, setRepeatPasword] = useState("");
+  const [alerta, setAlerta] = useState({})
+
+  const handleSubmit = e => {
+    e.preventDefault();
+
+    if([nombre, email, password, repeatPassword].includes('')){
+      setAlerta({
+        msg: 'All the fields are required',
+        error: true
+      })
+      return
+    }
+
+    if(password !== repeatPassword) {
+      setAlerta({
+        msg: "Passwords do not match",
+        error: true,
+      });
+    }
+
+    if(password.length < 6){
+      setAlerta({
+        msg: 'The password must have at least 6 characters',
+        error: true
+      })
+    }
+
+    setAlerta({});
+
+    //Crear usuario en la API
+  }
+
+  const { msg } = alerta;
+  const isEmpty = msg;
+
   return (
     <>
       <h1 className="text-sky-600 font-black text-center text-4xl">
         Manage your <span className="text-slate-700"> projects</span>
       </h1>
-      <form className="my-10 bg-white rounded-md shadow-lg p-10">
+      <form
+        onSubmit={handleSubmit}
+        className="my-10 bg-white rounded-md shadow-lg p-10"
+      >
         <div className="my-5">
           <label
             className="text-gray-600 block text-xl font-semibold"
@@ -18,8 +63,15 @@ const Register = () => {
             type="text"
             id="name"
             placeholder="Enter your full name"
-            className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+            className={`${
+              isEmpty && nombre === "" ? "border-red-400" : "border"
+            } w-full mt-3 p-3 border rounded-xl bg-gray-50`}
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
           />
+          {isEmpty && nombre === "" && (
+            <p className="text-red-400 mt-2">Please enter your name</p>
+          )}
         </div>
 
         <div className="my-5">
@@ -33,8 +85,15 @@ const Register = () => {
             type="email"
             id="email"
             placeholder="Enter your email"
-            className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+            className={`${
+              isEmpty && email === "" ? "border-red-400" : "border"
+            } w-full mt-3 p-3 border rounded-xl bg-gray-50`}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
           />
+          {isEmpty && email === "" && (
+            <p className="text-red-400 mt-2">Please enter your email</p>
+          )}
         </div>
 
         <div className="my-5">
@@ -48,8 +107,15 @@ const Register = () => {
             type="password"
             id="password"
             placeholder="Enter your password"
-            className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+            className={`${
+              isEmpty && password === "" ? "border-red-400" : "border"
+            } w-full mt-3 p-3 border rounded-xl bg-gray-50`}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
+          {isEmpty && password === "" && (
+            <p className="text-red-400 mt-2">Please enter your a password</p>
+          )}
         </div>
 
         <div className="my-5">
@@ -63,8 +129,15 @@ const Register = () => {
             type="password"
             id="password2"
             placeholder="Repite your password"
-            className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+            className={`${
+              isEmpty && repeatPassword === "" ? "border-red-400" : "border"
+            } w-full mt-3 p-3 border rounded-xl bg-gray-50`}
+            value={repeatPassword}
+            onChange={(e) => setRepeatPasword(e.target.value)}
           />
+          {isEmpty && repeatPassword === "" && (
+            <p className="text-red-400 mt-2">Please repeat your password</p>
+          )}
         </div>
 
         <input
@@ -72,6 +145,8 @@ const Register = () => {
           value="SIGN UP"
           className="bg-sky-700 w-full  mb-5 py-3 text-white font-bold rounded-lg hover:cursor-pointer hover:bg-sky-800 hover:shadow transition-all shadow-lg"
         />
+
+        {msg && <Alerta alerta={alerta} />}
       </form>
 
       <nav className="lg:flex lg:justify-between">
@@ -90,6 +165,6 @@ const Register = () => {
       </nav>
     </>
   );
-}
+};
 
-export default Register
+export default SignUp;
