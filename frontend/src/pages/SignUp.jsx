@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 const Register = () => {
   return (
     <>
-      <h1 className="text-sky-600 font-black text-4xl">
+      <h1 className="text-sky-600 font-black text-center text-4xl">
         Manage your <span className="text-slate-700"> projects</span>
       </h1>
       <form className="my-10 bg-white rounded-md shadow-lg p-10">
