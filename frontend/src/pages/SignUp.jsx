@@ -4,16 +4,16 @@ import { Link } from "react-router-dom";
 import Alerta from "../components/Alerta";
 
 const SignUp = () => {
-  const [nombre, setNombre] = useState("");
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [repeatPassword, setRepeatPasword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
   const [alerta, setAlerta] = useState({})
 
   const handleSubmit = e => {
     e.preventDefault();
 
-    if([nombre, email, password, repeatPassword].includes('')){
+    if([name, email, password, repeatPassword].includes('')){
       setAlerta({
         msg: 'All the fields are required',
         error: true
@@ -23,16 +23,18 @@ const SignUp = () => {
 
     if(password !== repeatPassword) {
       setAlerta({
-        msg: "Passwords do not match",
-        error: true,
+        msg: 'Passwords do not match',
+        error: true
       });
+      return
     }
 
-    if(password.length < 6){
+    if(password.length < 6 || repeatPassword.length < 6){
       setAlerta({
         msg: 'The password must have at least 6 characters',
         error: true
-      })
+      });
+      return
     }
 
     setAlerta({});
@@ -64,14 +66,14 @@ const SignUp = () => {
             id="name"
             placeholder="Enter your full name"
             className={`${
-              isEmpty && nombre === "" ? "border-red-400" : "border"
+              isEmpty && name === "" ? "border-red-400" : "border"
             } w-full mt-3 p-3 border rounded-xl bg-gray-50`}
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
-          {isEmpty && nombre === "" && (
+          {/* {isEmpty && nombre === "" && (
             <p className="text-red-400 mt-2">Please enter your name</p>
-          )}
+          )} */}
         </div>
 
         <div className="my-5">
@@ -91,9 +93,9 @@ const SignUp = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          {isEmpty && email === "" && (
+          {/* {isEmpty && email === "" && (
             <p className="text-red-400 mt-2">Please enter your email</p>
-          )}
+          )} */}
         </div>
 
         <div className="my-5">
@@ -113,9 +115,9 @@ const SignUp = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          {isEmpty && password === "" && (
+          {/* {isEmpty && password === "" && (
             <p className="text-red-400 mt-2">Please enter your a password</p>
-          )}
+          )} */}
         </div>
 
         <div className="my-5">
@@ -133,11 +135,11 @@ const SignUp = () => {
               isEmpty && repeatPassword === "" ? "border-red-400" : "border"
             } w-full mt-3 p-3 border rounded-xl bg-gray-50`}
             value={repeatPassword}
-            onChange={(e) => setRepeatPasword(e.target.value)}
+            onChange={(e) => setRepeatPassword(e.target.value)}
           />
-          {isEmpty && repeatPassword === "" && (
+          {/* {isEmpty && repeatPassword === "" && (
             <p className="text-red-400 mt-2">Please repeat your password</p>
-          )}
+          )} */}
         </div>
 
         <input
@@ -152,13 +154,13 @@ const SignUp = () => {
       <nav className="lg:flex lg:justify-between">
         <Link
           to="/"
-          className="block my-5 text-center text-slate-500 text-sm uppercase"
+          className="block my-5 px-3 text-center font-semibold text-slate-500 text-sm uppercase"
         >
           Sing in
         </Link>
         <Link
           to="/forgot-password"
-          className="block my-5 text-center text-slate-500 text-sm uppercase"
+          className="block my-5 px-3 text-center font-semibold text-slate-500 text-sm uppercase"
         >
           Forgot your password?
         </Link>

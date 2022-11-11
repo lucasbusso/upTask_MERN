@@ -47,13 +47,13 @@ const Login = () => {
       <nav className="lg:flex lg:justify-between">
         <Link
           to="/signup"
-          className="block my-5 text-center text-slate-500 text-sm uppercase"
+          className="block my-5 px-3 font-semibold text-center text-slate-500 text-sm uppercase"
         >
           Sing up
         </Link>
         <Link
           to="/forgot-password"
-          className="block my-5 text-center text-slate-500 text-sm uppercase"
+          className="block my-5 px-3 font-semibold text-center text-slate-500 text-sm uppercase"
         >
           Forgot your password?
         </Link>

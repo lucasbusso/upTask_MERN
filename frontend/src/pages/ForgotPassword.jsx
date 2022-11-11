@@ -33,7 +33,7 @@ const ForgotPassword = () => {
       <nav className="lg:flex lg:justify-between">
         <Link
           to="/"
-          className="block my-5 text-center text-slate-500 text-sm uppercase"
+          className="block my-5 px-3 font-semibold text-center text-slate-500 text-sm uppercase"
         >
           Back to <span className="text-sky-700 text-bold">sign in</span> page
         </Link>
