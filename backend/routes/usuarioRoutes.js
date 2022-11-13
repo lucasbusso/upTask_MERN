@@ -15,9 +15,9 @@ const router = express.Router();
 //Autenticacion, confirmar y confirmacion de usuarios
 router.post("/", registrar);
 router.post("/login", autenticar);
-router.get("/confirmar/:token", confirmar);
-router.post("/recuperar-password", recuperarContraseña);
-router.route("/recuperar-password/:token")
+router.get("/confirm-account/:token", confirmar);
+router.post("/reset-password", recuperarContraseña);
+router.route("/reset-password/:token")
   .get(comprobarToken)
   .post(nuevoPassword);
 router.get("/perfil", checkAuth, perfil);

@@ -178,7 +178,7 @@ const SignUp = () => {
           Sing in
         </Link>
         <Link
-          to="/forgot-password"
+          to="/reset-password"
           className="block my-5 px-3 text-center font-semibold text-slate-500 text-sm uppercase"
         >
           Forgot your password?

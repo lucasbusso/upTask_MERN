@@ -14,7 +14,7 @@ const ConfirmAccout = () => {
     const confirmAccount = async () => {
 
       try {
-        const url = `http://localhost:4000/api/usuarios/confirmar/${id}`
+        const url = `http://localhost:4000/api/usuarios/confirm-account/${id}`
         const { data } = await axios.get(url);
         
         setAlerta({

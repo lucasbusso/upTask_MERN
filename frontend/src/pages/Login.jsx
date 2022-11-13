@@ -52,7 +52,7 @@ const Login = () => {
           Sing up
         </Link>
         <Link
-          to="/forgot-password"
+          to="/reset-password"
           className="block my-5 px-3 font-semibold text-center text-slate-500 text-sm uppercase"
         >
           Forgot your password?

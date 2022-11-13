@@ -1,13 +1,49 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
+import Alerta from "../components/Alerta";
 
 const ForgotPassword = () => {
+  const [email, setEmail] = useState('');
+  const [alerta, setAlerta] = useState({})
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    if(email === '' || !email.includes('@')) {
+      setAlerta({
+        msg: "Enter your email",
+        error: true
+      })
+      return
+    }
+
+    try {
+      const { data } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/usuarios/reset-password`, {email});
+      setAlerta({
+        msg: data.msg,
+        error: false
+      })
+    } catch (error) {
+      console.log(error)
+      setAlerta({
+        msg: error.response.data.msg,
+        error: true
+      })
+    }
+  }
+
+  const { msg } = alerta;
   return (
     <>
       <h1 className="text-gray-700 font-black text-center text-4xl">
         Reset your password
       </h1>
-      <form className="my-10 bg-white rounded-md shadow-lg p-10">
-        <div className="my-5">
+      <form 
+        className="my-10 bg-white rounded-md shadow-lg p-10"
+        onSubmit={handleSubmit}
+      >
+        <div className="mt-5">
           <label
             className="text-gray-600 block text-md font-regular"
             htmlFor="email"
@@ -20,14 +56,19 @@ const ForgotPassword = () => {
             id="email"
             placeholder="Enter your email"
             className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+            value={email}
+            onChange={ e => setEmail(e.target.value)}
           />
         </div>
+
+        {msg && <Alerta  alerta={alerta}/>}
 
         <input
           type="submit"
           value="Send password reset email"
-          className="bg-sky-700 w-full  mb-5 py-3 text-white font-bold rounded-lg hover:cursor-pointer hover:bg-sky-800 hover:shadow transition-all shadow-lg"
+          className="bg-sky-700 w-full my-5 py-3 text-white font-bold rounded-lg hover:cursor-pointer hover:bg-sky-800 hover:shadow transition-all shadow-lg"
         />
+        
       </form>
 
       <nav className="lg:flex lg:justify-between">

@@ -1,7 +1,7 @@
 import Usuario from "../models/Usuarios.js";
 import generarId from "../helpers/generarId.js";
 import generarJWT from "../helpers/generarJWT.js";
-import { registerEmail } from "../helpers/email.js";
+import { registerEmail, resetPassword } from "../helpers/email.js";
 
 const registrar = async (req, res) => {
   const { email } = req.body; //para extraer valores de un formulario es con req.body
@@ -66,10 +66,10 @@ const confirmar = async (req, res) => {
     const {token} = req.params;  //para extraer valores de la url es con req.params
     const usuarioConfirmar = await Usuario.findOne({token});
 
-    if(!usuarioConfirmar) {
-        const error = new Error("Invalid token");
-        return res.status(403).json({ msg: error.message });
-    }
+    // if(!usuarioConfirmar) {
+    //     const error = new Error("Invalid token");
+    //     return res.status(403).json({ msg: error.message });
+    // }
 
     try {
         usuarioConfirmar.confirmado = true;
@@ -93,6 +93,14 @@ const recuperarContraseña = async (req, res) => {
   try {
     usuario.token = generarId();
     await usuario.save();
+
+    //Enviar email
+    resetPassword({
+      email: usuario.email,
+      name: usuario.name,
+      token: usuario.token
+    })
+
     res.json({ msg: "Check your email" });
   } catch (error) {
     console.log(error);
