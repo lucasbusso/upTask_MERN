@@ -14,7 +14,7 @@ export const registerEmail = async (datos) => {
 
     //Informacion del email
     const info = await transport.sendMail({
-        from:'"upTask - Manage your projects" <cuentas@upTask.com>',
+        from:'"upTask - Manage your projects" <cuentas@uptask.com>',
         to: email,
         subject: 'upTask - Confirm your account',
         text: 'Confirm your account in upTask',
@@ -27,5 +27,5 @@ export const registerEmail = async (datos) => {
         </a>
         <p>If you don't created this account, ignore this mail</p>
         `,
-    })
+    });
 }

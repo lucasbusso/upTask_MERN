@@ -75,7 +75,7 @@ const confirmar = async (req, res) => {
         usuarioConfirmar.confirmado = true;
         usuarioConfirmar.token = '';
         await usuarioConfirmar.save();
-        res.json({msg: "Verificated"})
+        res.json({msg: "Email verified successfully"})
     } catch (error) {
         console.log(error);
     }
