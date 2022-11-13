@@ -61,7 +61,8 @@ const SignUp = () => {
   }
 
   const { msg } = alerta;
-  const isEmpty = msg;
+  const { error } = alerta;
+  const isEmpty = error;
 
   return (
     <>
