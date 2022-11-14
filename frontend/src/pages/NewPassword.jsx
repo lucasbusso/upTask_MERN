@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import axios from "axios";
+import axiosClient from "../config/AxiosClient";
 import Alerta from "../components/Alerta";
 
 const NewPassword = () => {
@@ -15,7 +15,7 @@ const [passwordModified, setPasswordModified] = useState(false);
   useEffect(() => {
     const getToken = async () => {
       try {
-        await axios.get(`http://localhost:4000/api/usuarios/reset-password/${token}`);
+        await axiosClient.get(`/usuarios/reset-password/${token}`);
         setValidToken(true);
       } catch (error) {
         setAlerta({
@@ -39,8 +39,8 @@ const [passwordModified, setPasswordModified] = useState(false);
     }
 
     try {
-      const url = `http://localhost:4000/api/usuarios/reset-password/${token}`;
-      const { data } = await axios.post(url, {password});
+      const url = `/usuarios/reset-password/${token}`;
+      const { data } = await axiosClient.post(url, {password});
       setAlerta({
         msg: data.msg,
         error: false
