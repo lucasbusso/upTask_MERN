@@ -26,7 +26,7 @@ const registrar = async (req, res) => {
       token: usuario.token
     })
 
-    res.json({ msg: "User created, we sent you an email with a verification link"});
+    res.json({ msg: "Check your email to verify your account"});
   } catch (error) {
     console.log(error);
   }
@@ -75,9 +75,9 @@ const confirmar = async (req, res) => {
         usuarioConfirmar.confirmado = true;
         usuarioConfirmar.token = '';
         await usuarioConfirmar.save();
-        res.json({msg: "Email verified successfully"})
+        res.json({msg: "Status: email verified successfully"})
     } catch (error) {
-        console.log(error);
+      res.json({msg: "Status: the confirmation's failed"})
     }
 }
 
@@ -112,10 +112,10 @@ const comprobarToken = async (req, res) => {
   const tokenValido = await Usuario.findOne({ token });
 
   if(tokenValido) {
-    res.json({ msg: "Invalid token, the user don't exist"});
+    res.json({ msg: "Valid token"});
   } else {
-        const error = new Error("Invalid token");
-        return res.status(404).json({ msg: error.message });
+    const error = new Error("Invalid token");
+    return res.status(404).json({ msg: error.message });
   }
 }
 
