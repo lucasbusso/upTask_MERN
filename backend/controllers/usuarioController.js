@@ -64,7 +64,7 @@ const autenticar = async (req, res) => {
 
 const confirmar = async (req, res) => {
     const {token} = req.params;  //para extraer valores de la url es con req.params
-    const usuarioConfirmar = await Usuario.findOne({token});
+    const usuarioConfirmar = await Usuario.findOne({ token });
 
     // if(!usuarioConfirmar) {
     //     const error = new Error("Invalid token");
@@ -72,12 +72,12 @@ const confirmar = async (req, res) => {
     // }
 
     try {
-        usuarioConfirmar.confirmado = true;
-        usuarioConfirmar.token = '';
-        await usuarioConfirmar.save();
-        res.json({msg: "Status: email verified successfully"})
+      usuarioConfirmar.confirmado = true;
+      usuarioConfirmar.token = "";
+      await usuarioConfirmar.save();
+      res.json({ msg: "Status: email verified successfully" });
     } catch (error) {
-      res.json({msg: "Status: the confirmation's failed"})
+      console.log(error)
     }
 }
 
@@ -131,7 +131,7 @@ const nuevoPassword = async (req, res) => {
 
     try {
       await usuario.save()
-      return res.json({msg: "Password changed"})
+      res.json({msg: "Password changed"})
     } catch (error) {
       console.log(error);
     }

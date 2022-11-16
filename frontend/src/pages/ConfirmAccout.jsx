@@ -43,15 +43,27 @@ const ConfirmAccout = () => {
       </h1>
       <div className="mt-20 md:mt-10 shadow-lg p-5 rounded-xl bg-white">
         {msg && <Alerta alerta={alerta} />}
-      </div>
-      {cuentaConfirmada && (
-          <Link
-          to="/"
-          className="bg-sky-700 w-full text-white rounded-lg hover:cursos-pointer hover:bg-sky-800 hover:shadow transition-all shadow-lg block mt-10 px-3 py-3 text-center"
-        >
-          Sing in
-        </Link>
+
+        {!cuentaConfirmada && (
+          <>
+            <h2 className="text-center text-red-500 font-semibold uppercase text-xl">Invalid Token</h2>
+            <Link
+            to="/signup"
+            className="bg-sky-700 w-full text-white rounded-lg hover:cursos-pointer hover:bg-sky-800 hover:shadow transition-all shadow-lg block mt-10 px-3 py-3 text-center"
+            >
+              Sing up
+            </Link>
+          </>
         )}
+        {cuentaConfirmada && (
+          <Link
+            to="/"
+            className="bg-sky-700 w-full text-white rounded-lg hover:cursos-pointer hover:bg-sky-800 hover:shadow transition-all shadow-lg block mt-10 px-3 py-3 text-center"
+          >
+            Sing in
+          </Link>
+        )}
+      </div>
     </>
   );
 }
