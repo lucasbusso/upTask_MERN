@@ -9,6 +9,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import NewPassword from './pages/NewPassword';
 import ConfirmAccout from "./pages/ConfirmAccout";
 import Proyectos from './pages/Proyectos';
+import NewProject from './pages/NewProject';
 
 import { AuthProvider } from './context/AuthProvider';
 
@@ -26,8 +27,9 @@ function App() {
             <Route path="reset-password/:token" element={<NewPassword />} />
             <Route path="confirm-account/:id" element={<ConfirmAccout />} />
           </Route>
-          <Route path="/proyectos" element={<PrivateRoute /> }>
+          <Route path="/proyectos" element={<PrivateRoute />}>
             <Route index element={<Proyectos />} />
+            <Route path="new-project" element={<NewProject />} />
           </Route>
         </Routes>
       </AuthProvider>
