@@ -24,12 +24,12 @@ const obtenerProyecto = async (req, res) => {
   const project = await Proyecto.findById(id);
 
   if (!project) {
-    const error = new Error("Proyecto no encontrado");
+    const error = new Error("Project not found");
     return res.status(403).json({ msg: error.message });
   }
 
   if (project.creador.toString() !== req.usuario._id.toString()) {
-    const error = new Error("No tienes permisos en este proyecto");
+    const error = new Error("Permissions error");
     return res.status(403).json({ msg: error.message });
   }
 
@@ -44,19 +44,19 @@ const editarProyecto = async (req, res) => {
   const proyecto = await Proyecto.findById(id);
 
   if(!proyecto) {
-    const error = new Error("Proyecto no encontrado");
+    const error = new Error("Project not found");
     return res.status(403).json({ msg: error.message });
   }
 
   if (proyecto.creador.toString() !== req.usuario._id.toString()){
-    const error = new Error("No tienes permisos en este proyecto");
+    const error = new Error("Permissions error");
     return res.status(403).json({ msg: error.message });
   }
 
-  proyecto.nombre = req.body.nombre || proyecto.nombre;
-  proyecto.descripcion = req.body.descripcion || proyecto.descripcion;
-  proyecto.fechaEntrega = req.body.fechaEntrega || proyecto.fechaEntrega;
-  proyecto.cliente = req.body.cliente || proyecto.cliente;
+  proyecto.name = req.body.nombre || proyecto.name;
+  proyecto.description = req.body.descripcion || proyecto.description;
+  proyecto.deadline = req.body.fechaEntrega || proyecto.deadline;
+  proyecto.client = req.body.cliente || proyecto.client;
 
   try {
     const proyectoAlmacenado = await proyecto.save();
@@ -71,18 +71,18 @@ const eliminarProyecto = async (req, res) => {
   const proyecto = await Proyecto.findById(id);
 
   if(!proyecto) {
-    const error = new Error("Proyecto no encontrado");
+    const error = new Error("Project not found");
     return res.status(403).json({ msg: error.message });
   }
 
   if (proyecto.creador.toString() !== req.usuario._id.toString()){
-    const error = new Error("No tienes permisos en este proyecto");
+    const error = new Error("Permissions error");
     return res.status(403).json({ msg: error.message });
   }
 
   try {
     await proyecto.deleteOne();
-    res.json({ msg: "Proyecto eliminado" })
+    res.json({ msg: "Project deleted" })
   } catch (error) {
     console.log(error)
   }

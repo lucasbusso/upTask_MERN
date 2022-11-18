@@ -12,26 +12,29 @@ import Proyectos from './pages/Proyectos';
 import NewProject from './pages/NewProject';
 
 import { AuthProvider } from './context/AuthProvider';
+import { ProyectosProvider } from './context/ProyectosProvider';
 
 function App() {
 
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Routes>
-          {/* Public paths */}
-          <Route path="/" element={<AuthLayout />}>
-            <Route index element={<Login />} />
-            <Route path="signup" element={<SignUp />} />
-            <Route path="reset-password" element={<ForgotPassword />} />
-            <Route path="reset-password/:token" element={<NewPassword />} />
-            <Route path="confirm-account/:id" element={<ConfirmAccout />} />
-          </Route>
-          <Route path="/proyectos" element={<PrivateRoute />}>
-            <Route index element={<Proyectos />} />
-            <Route path="new-project" element={<NewProject />} />
-          </Route>
-        </Routes>
+        <ProyectosProvider>
+          <Routes>
+            {/* Public paths */}
+            <Route path="/" element={<AuthLayout />}>
+              <Route index element={<Login />} />
+              <Route path="signup" element={<SignUp />} />
+              <Route path="reset-password" element={<ForgotPassword />} />
+              <Route path="reset-password/:token" element={<NewPassword />} />
+              <Route path="confirm-account/:id" element={<ConfirmAccout />} />
+            </Route>
+            <Route path="/projects" element={<PrivateRoute />}>
+              <Route index element={<Proyectos />} />
+              <Route path="new-project" element={<NewProject />} />
+            </Route>
+          </Routes>
+        </ProyectosProvider>
       </AuthProvider>
     </BrowserRouter>
   );

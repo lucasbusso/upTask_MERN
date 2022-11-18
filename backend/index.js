@@ -29,7 +29,7 @@ app.use(cors(corsOptions));
 
 //Routing 
 app.use('/api/usuarios', usuarioRoutes);
-app.use("/api/proyectos", proyectoRoutes);
+app.use("/api/projects", proyectoRoutes);
 app.use("/api/tareas", tareaRoutes);
 
 const PORT = process.env.PORT || 4000;
