@@ -34,7 +34,7 @@ const ProyectosProvider = ({children}) => {
         getProjects()
     }, [])
 
-    const showAlert = alerta => {
+    const showAlert = (alerta) => {
         setAlerta(alerta);
 
         setTimeout(() => {
@@ -42,32 +42,64 @@ const ProyectosProvider = ({children}) => {
         }, 5000);
     }
 
-    const submitProject = async project => {
+    const submitProject = async (project) => {
+
+        if(project.id) {
+            editProject(project);
+        } else {
+            newProject(project);
+        }
+       
+    }
+
+    const editProject = async (project) => {
         try {
-            const token = localStorage.getItem('token');
-            if(!token) return
+            const token = localStorage.getItem("token");
+            if (!token) return;
 
             const config = {
                 headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                }
-            }
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+                },
+            };
 
-            const { data } = await axiosClient.post("/projects", project, config); 
-            setProyectos([...proyectos, data])
+            const {data} = await axiosClient.put(`/projects/${project.id}`, project, config);
+
+            const updatedProjects = proyectos.map(stateProject => stateProject._id === data._id ? data : stateProject);
+            setProyectos(updatedProjects);
+
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const newProject = async (project) => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+
+            const config = {
+                headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+                },
+            };
+
+            const { data } = await axiosClient.post("/projects", project, config);
+            setProyectos([...proyectos, data]);
 
             setAlerta({
-                msg: 'New project created',
-                error: false
-            })
+                msg: "New project created",
+                error: false,
+            });
 
             setTimeout(() => {
                 setAlerta({});
-                navigate('/projects');
+                navigate("/projects");
             }, 4000);
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
     }
 

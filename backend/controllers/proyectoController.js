@@ -52,14 +52,14 @@ const editarProyecto = async (req, res) => {
     return res.status(403).json({ msg: error.message });
   }
 
-  proyecto.name = req.body.nombre || proyecto.name;
-  proyecto.description = req.body.descripcion || proyecto.description;
-  proyecto.deadline = req.body.fechaEntrega || proyecto.deadline;
-  proyecto.client = req.body.cliente || proyecto.client;
+  proyecto.name = req.body.name || proyecto.name;
+  proyecto.description = req.body.description || proyecto.description;
+  proyecto.deadline = req.body.deadline || proyecto.deadline;
+  proyecto.client = req.body.client || proyecto.client;
 
   try {
     const proyectoAlmacenado = await proyecto.save();
-    res.json(proyecto);
+    res.json(proyectoAlmacenado);
   } catch (error) {
     console.log(error);
   }
