@@ -45,9 +45,9 @@ const ProyectosProvider = ({children}) => {
     const submitProject = async (project) => {
 
         if(project.id) {
-            editProject(project);
+            await editProject(project);
         } else {
-            newProject(project);
+            await newProject(project);
         }
        
     }
@@ -66,8 +66,19 @@ const ProyectosProvider = ({children}) => {
 
             const {data} = await axiosClient.put(`/projects/${project.id}`, project, config);
 
+            //Actualiza la lista de proyectos del path /projects cuando guardas cambios de edit
             const updatedProjects = proyectos.map(stateProject => stateProject._id === data._id ? data : stateProject);
             setProyectos(updatedProjects);
+
+            setAlerta({
+                msg: "Changes saved",
+                error: false,
+            });
+
+            setTimeout(() => {
+                setAlerta({});
+                navigate("/projects");
+            }, 2500);
 
         } catch (error) {
             console.log(error)
