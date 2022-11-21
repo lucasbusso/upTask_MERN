@@ -1,14 +1,28 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom';
 import useProyectos from '../hooks/useProyectos';
 import Alerta from './Alerta';
 
 const FormularioProyecto = () => {
     const [name, setName] = useState('');
+    const [id, setId] = useState(null);
     const [description, setDescription] = useState('');
     const [deadline, setDeadline] = useState('');
     const [client, setClient] = useState('');
 
-    const { showAlert, alerta, submitProject } = useProyectos();
+    const params = useParams();
+
+    const { showAlert, alerta, submitProject, proyecto } = useProyectos();
+
+    useEffect(() => {
+        if( params.id ){
+            setId(proyecto._id)
+            setName(proyecto.name);
+            setDescription(proyecto.description);
+            setDeadline(proyecto.deadline?.split('T')[0]);
+            setClient(proyecto.client);
+        }
+    }, [params]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -103,7 +117,7 @@ const FormularioProyecto = () => {
 
         <input 
             type='submit'
-            value='Create project'
+            value={id ? 'Save changes' : 'Create project'}
             className='bg-sky-600 w-full p-3 uppercase font-bold text-white rounded cursor-pointer hover:bg-sky-700 transition-colors'
         />
 

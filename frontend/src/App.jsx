@@ -10,6 +10,8 @@ import NewPassword from './pages/NewPassword';
 import ConfirmAccout from "./pages/ConfirmAccout";
 import Proyectos from './pages/Proyectos';
 import NewProject from './pages/NewProject';
+import Project from './pages/Project';
+import EditProject from './pages/EditProject';
 
 import { AuthProvider } from './context/AuthProvider';
 import { ProyectosProvider } from './context/ProyectosProvider';
@@ -32,6 +34,8 @@ function App() {
             <Route path="/projects" element={<PrivateRoute />}>
               <Route index element={<Proyectos />} />
               <Route path="new-project" element={<NewProject />} />
+              <Route path=":id" element={<Project />} />
+              <Route path="edit/:id" element={<EditProject />} />
             </Route>
           </Routes>
         </ProyectosProvider>
