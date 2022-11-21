@@ -3,17 +3,16 @@ import { useParams, Link } from "react-router-dom";
 import useProyectos from "../hooks/useProyectos";
 
 const Project = () => {
-    const params = useParams();
-    const { getProject, proyecto, loading } = useProyectos();
+  const params = useParams();
+  const { getProject, proyecto, loading } = useProyectos();
 
-    useEffect(() => {
-        getProject(params.id); 
-    }, []);
+  useEffect(() => {
+      getProject(params.id); 
+  }, []);
 
-    const { name } = proyecto;
-  return loading ? (
-    "Loading..."
-  ) : (
+  const { name } = proyecto;
+  return loading ? "Loading..."
+  : (
     <div className="flex justify-between">
       <h1 className="font-black text-4xl">{name}</h1>
       <div className="flex items-center gap-2 text-gray-400 hover:text-black">
