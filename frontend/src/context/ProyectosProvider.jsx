@@ -9,6 +9,7 @@ const ProyectosProvider = ({children}) => {
     const [proyecto, setProyecto] = useState({});
     const [alerta, setAlerta] = useState({});
     const [loading, setLoading] = useState(false);
+    const [modal, setModal] = useState(false);
 
     const navigate = useNavigate();
 
@@ -168,6 +169,10 @@ const ProyectosProvider = ({children}) => {
         }
     }
 
+    const handleModal = () => {
+        setModal(!modal);
+    }
+
     return (
       <ProyectosContext.Provider
         value={{
@@ -179,6 +184,8 @@ const ProyectosProvider = ({children}) => {
           proyecto,
           loading,
           deleteProject,
+          modal,
+          handleModal
         }}
       >
         {children}

@@ -1,10 +1,12 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import useProyectos from "../hooks/useProyectos";
+import Modal from "../components/Modal";
 
 const Project = () => {
+  const [modal, setModal] = useState(false)
   const params = useParams();
-  const { getProject, proyecto, loading } = useProyectos();
+  const { getProject, proyecto, loading, handleModal } = useProyectos();
 
   useEffect(() => {
       getProject(params.id); 
@@ -35,9 +37,11 @@ const Project = () => {
           <Link to={`/projects/edit/${params.id}`}>Edit</Link>
         </div>
       </div>
+
       <button
         type="button"
         className="mt-5 text-md px-5 py-3 w-full md:w-auto rounded-lg font-bold bg-sky-500 text-center text-white flex gap-2 items-center"
+        onClick={ handleModal }
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -53,6 +57,12 @@ const Project = () => {
         </svg>
         New task
       </button>
+
+      <Modal 
+        modal={modal}
+        setModal={setModal}
+      />
+
     </>
   );
 }
