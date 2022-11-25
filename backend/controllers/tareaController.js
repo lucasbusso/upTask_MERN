@@ -2,21 +2,24 @@ import Proyecto from "../models/Proyecto.js";
 import Tarea from "../models/Tarea.js";
 
 const agregarTarea = async (req, res) => {
-    const { proyecto } = req.body;
-    const getProyecto = await Proyecto.findById(proyecto);
+    const { project } = req.body;
+    const getProject = await Proyecto.findById(project);
 
-    if(!proyecto) {
-        const error = new Error("El proyecto no existe");
+    if(!getProject) {
+        const error = new Error("Project not found");
         return res.status(404).json({ msg: error.message });
     }
 
-    if(getProyecto.creador.toString() !== req.usuario._id.toString()){
-        const error = new Error("No tienes permisos para añadir tareas");
+    if(getProject.creador.toString() !== req.usuario._id.toString()){
+        const error = new Error("Permissions failed");
         return res.status(404).json({ msg: error.message });
     }
 
     try {
         const setTarea = await Tarea.create(req.body);
+        // Save ID in the project
+        getProject.tasks.push(setTarea._id)
+        await getProject.save();  
         res.json(setTarea)
     } catch (error) {
         console.log(error)
@@ -25,13 +28,13 @@ const agregarTarea = async (req, res) => {
 
 const obtenerTarea = async (req, res) => {
     const { id } = req.params;
-    const tarea = await Tarea.findById(id).populate("proyecto");
+    const tarea = await Tarea.findById(id).populate("project");
 
     if(!tarea) {
         const error = new Error("No se ha encontrado esta tarea");
         return res.status(404).json({ msg: error.message });
     }
-    if(tarea.proyecto.creador.toString() !== req.usuario._id.toString()) {
+    if(tarea.project.creador.toString() !== req.usuario._id.toString()) {
         const error = new Error("No tienes permisos para acceder a esta tarea");
         return res.status(403).json({ msg: error.message });
     }
@@ -41,21 +44,21 @@ const obtenerTarea = async (req, res) => {
 
 const actualizarTarea = async (req, res) => {
     const { id } = req.params;
-    const tarea = await Tarea.findById(id).populate("proyecto");
+    const tarea = await Tarea.findById(id).populate("project");
 
     if(!tarea) {
         const error = new Error("No se ha encontrado esta tarea");
         return res.status(404).json({ msg: error.message });
     }
-    if(tarea.proyecto.creador.toString() !== req.usuario._id.toString()) {
+    if(tarea.project.creador.toString() !== req.usuario._id.toString()) {
         const error = new Error("No tienes permisos para acceder a esta tarea");
         return res.status(403).json({ msg: error.message });
     }
 
-    tarea.nombre = req.body.nombre || tarea.nombre;
-    tarea.descripcion = req.body.descripcion || tarea.descripcion;
-    tarea.prioridad = req.body.prioridad || tarea.prioridad;
-    tarea.fechaEntrega = req.body.fechaEntrega || tarea.fechaEntrega;
+    tarea.name = req.body.name || tarea.nombre;
+    tarea.description = req.body.description || tarea.description;
+    tarea.priority = req.body.priority || tarea.priority;
+    tarea.deadline = req.body.deadline || tarea.deadline;
 
     try {
         const tareaActualizada = await tarea.save();
@@ -66,13 +69,13 @@ const actualizarTarea = async (req, res) => {
 };
 const eliminarTarea = async (req, res) => {
     const { id } = req.params;
-    const tarea = await Tarea.findById(id).populate("proyecto");
+    const tarea = await Tarea.findById(id).populate("project");
 
     if(!tarea) {
         const error = new Error("No se ha encontrado esta tarea");
         return res.status(404).json({ msg: error.message });
     }
-    if(tarea.proyecto.creador.toString() !== req.usuario._id.toString()) {
+    if(tarea.project.creador.toString() !== req.usuario._id.toString()) {
         const error = new Error("No tienes permisos para acceder a esta tarea");
         return res.status(403).json({ msg: error.message });
     }

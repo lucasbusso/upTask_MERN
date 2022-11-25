@@ -1,31 +1,31 @@
 import mongoose from "mongoose";
 
 const tareaSchema = mongoose.Schema({
-    nombre: {
+    name: {
         type: String,
         trim: true,
         required: true,
     },
-    descripcion: {
+    description: {
         type: String,
         trim: true,
         required: true,
     },
-    estado: {
+    state: {
         type: Boolean,
         default: false,
     },
-    fechaEntreda: {
+    deadline: {
         type: Date,
         required: true,
         default: Date.now()
     },
-    prioridad: {
+    priority: {
         type: String,
         required: true,
         enum: ["Low", "Medium", "High"]
     },
-    proyecto: {
+    project: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Proyecto",
     }
@@ -33,6 +33,6 @@ const tareaSchema = mongoose.Schema({
     timestamps: true
 });
 
-const Tarea = mongoose.model("Tarea", tareaSchema);
+const Tarea = mongoose.model("Task", tareaSchema);
 
 export default Tarea;

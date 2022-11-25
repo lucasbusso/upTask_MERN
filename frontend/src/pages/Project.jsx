@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import useProyectos from "../hooks/useProyectos";
 import Modal from "../components/Modal";
+import Task from "../components/Task";
 
 const Project = () => {
-  const [modal, setModal] = useState(false)
   const params = useParams();
+  const [modal, setModal] = useState(false)
   const { getProject, proyecto, loading, handleModal } = useProyectos();
 
   useEffect(() => {
@@ -13,6 +14,7 @@ const Project = () => {
   }, []);
 
   const { name } = proyecto;
+  
   return loading ? (
     "Loading..."
   ) : (
@@ -57,6 +59,18 @@ const Project = () => {
         </svg>
         New task
       </button>
+      
+      <p className="font-bold text-xl mt-10">Project tasks</p>
+      <div className="bg-white shadow mt-10 rounded-lg">
+        {proyecto.tasks?.length ? 
+          proyecto.tasks?.map( task => (
+            <Task 
+              key={task._id}
+              task={task}
+            />
+          ))
+          : <p className="text-center my-5 p-10">No tasks entries</p>}
+      </div>
 
       <Modal 
         modal={modal}

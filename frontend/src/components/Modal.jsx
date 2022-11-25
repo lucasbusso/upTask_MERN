@@ -1,15 +1,39 @@
 import { Fragment, useState, useEffect } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import useProyectos from '../hooks/useProyectos'
+import Alerta from './Alerta'
+import { useParams } from 'react-router-dom'
 
 const PRIORITY = ['Low', 'Medium', 'High']
 
 const Modal = () => {
+    const params = useParams();
+
     const [name, setName] = useState('');
     const [description, setDescription] = useState("");
+    const [deadline, setDeadline] = useState("");
     const [priority, setPriority] = useState("");
 
-    const { modal, handleModal } = useProyectos();
+    const { modal, handleModal, showAlert, alerta, submitTask } = useProyectos();
+ 
+    const handleSubmit = async e => {
+      e.preventDefault();
+      if([name, description, deadline, priority].includes('')) {
+        showAlert({
+          msg: 'All the fields are required',
+          error: true
+        })
+        return
+      }
+      submitTask({ name, description, deadline, priority, project: params.id });
+
+      setName('');
+      setDescription('');
+      setDeadline('');
+      setPriority('');
+    }
+
+    const { msg } = alerta;
 
     return (
       <Transition.Root show={modal} as={Fragment}>
@@ -72,14 +96,20 @@ const Modal = () => {
                 </div>
 
                 <div className="sm:flex sm:items-start">
-                  <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                  <div className="mt-3 text-center sm:mt-0 sm:text-left w-full">
                     <Dialog.Title
                       as="h3"
                       className="text-lg leading-6 font-bold text-sky-600"
                     >
                       Add new task
                     </Dialog.Title>
-                    <form className="my-10">
+
+                    { msg && <Alerta alerta={alerta}/> }
+                     
+                    <form 
+                      className="my-5"
+                      onSubmit={handleSubmit}
+                    >
                       <div className="mb-5">
                         <label
                           className="text-gray-700 w-full uppercase font-bold text-sm"
@@ -115,6 +145,21 @@ const Modal = () => {
                       <div className="mb-5">
                         <label
                           className="text-gray-700 w-full uppercase font-bold text-sm"
+                          htmlFor="deadline"
+                        >
+                          Deliver deadline
+                        </label>
+                        <input
+                          type="date"
+                          id="deadline"
+                          className="border-2 w-full p-2 mt-2 placeholder-gray-400 rounded-md"
+                          value={deadline}
+                          onChange={(e) => setDeadline(e.target.value)}
+                        />
+                      </div>
+                      <div className="mb-5">
+                        <label
+                          className="text-gray-700 w-full uppercase font-bold text-sm"
                           htmlFor="priority"
                         >
                           Priority
@@ -136,7 +181,7 @@ const Modal = () => {
 
                       <input 
                         type="submit"
-                        className="bg-sky-600 hover:bg-sky-700 w-full p-3 text-white font-bold cursor-pointer transition-colors rounded"
+                        className="bg-sky-600 hover:bg-sky-700 w-full mt-5 p-3 text-white font-bold cursor-pointer transition-colors rounded"
                         value="Create task"
                       />
                     </form>

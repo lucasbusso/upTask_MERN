@@ -40,17 +40,15 @@ const ProyectosProvider = ({children}) => {
 
         setTimeout(() => {
             setAlerta({ })
-        }, 5000);
+        }, 3000);
     }
 
     const submitProject = async (project) => {
-
         if(project.id) {
             await editProject(project);
         } else {
             await newProject(project);
         }
-       
     }
 
     const editProject = async (project) => {
@@ -173,19 +171,46 @@ const ProyectosProvider = ({children}) => {
         setModal(!modal);
     }
 
+    const submitTask = async (task) => {
+        try {
+            const token = localStorage.getItem("token");
+           if (!token) return;
+
+           const config = {
+             headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${token}`,
+             },
+           };
+
+           const { data } = await axiosClient.post("/tasks", task, config);
+
+           //Add task to the state
+           const updatedProject = {...proyecto};
+           updatedProject.tasks = [...proyecto.tasks, data];
+
+           setProyecto(updatedProject);
+           setAlerta({});
+           setModal(false);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
       <ProyectosContext.Provider
         value={{
           proyectos,
-          showAlert,
           alerta,
-          submitProject,
-          getProject,
           proyecto,
           loading,
-          deleteProject,
           modal,
-          handleModal
+          showAlert,
+          submitProject,
+          getProject,
+          deleteProject,
+          handleModal,
+          submitTask,
         }}
       >
         {children}
