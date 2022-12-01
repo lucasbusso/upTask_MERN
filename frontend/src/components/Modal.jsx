@@ -10,13 +10,30 @@ const Modal = () => {
     const params = useParams();
 
     const [name, setName] = useState('');
-    const [description, setDescription] = useState("");
-    const [deadline, setDeadline] = useState("");
-    const [priority, setPriority] = useState("");
+    const [id, setId] = useState('');
+    const [description, setDescription] = useState('');
+    const [deadline, setDeadline] = useState('');
+    const [priority, setPriority] = useState('');
 
-    const { modal, handleModal, showAlert, alerta, submitTask } = useProyectos();
+    const { modal, handleModal, showAlert, alerta, submitTask, tarea } = useProyectos();
+
+    useEffect(() => {
+      if(tarea?._id){
+        setId(tarea._id);
+        setName(tarea.name);
+        setDescription(tarea.description);
+        setDeadline(tarea.deadline?.split('T')[0]);
+        setPriority(tarea.priority);
+        return
+      } 
+      setId('');
+      setName('');
+      setDescription('');
+      setDeadline('');
+      setPriority('');
+    }, [tarea])
  
-    const handleSubmit = async e => {
+    const handleSubmit = async (e) => {
       e.preventDefault();
       if([name, description, deadline, priority].includes('')) {
         showAlert({
@@ -25,8 +42,9 @@ const Modal = () => {
         })
         return
       }
-      submitTask({ name, description, deadline, priority, project: params.id });
+      await submitTask({ id, name, description, deadline, priority, project: params.id });
 
+      setId('');
       setName('');
       setDescription('');
       setDeadline('');
@@ -101,7 +119,7 @@ const Modal = () => {
                       as="h3"
                       className="text-lg leading-6 font-bold text-sky-600"
                     >
-                      Add new task
+                      {id ? "Edit task" : "Add new task"}
                     </Dialog.Title>
 
                     { msg && <Alerta alerta={alerta}/> }
@@ -182,7 +200,7 @@ const Modal = () => {
                       <input 
                         type="submit"
                         className="bg-sky-600 hover:bg-sky-700 w-full mt-5 p-3 text-white font-bold cursor-pointer transition-colors rounded"
-                        value="Create task"
+                        value={id ? "Save changes" : "Create task"}
                       />
                     </form>
                   </div>

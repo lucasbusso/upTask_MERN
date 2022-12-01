@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import useProyectos from "../hooks/useProyectos";
 import Modal from "../components/Modal";
@@ -6,7 +6,6 @@ import Task from "../components/Task";
 
 const Project = () => {
   const params = useParams();
-  const [modal, setModal] = useState(false)
   const { getProject, proyecto, loading, handleModal } = useProyectos();
 
   useEffect(() => {
@@ -72,10 +71,7 @@ const Project = () => {
           : <p className="text-center my-5 p-10">No tasks entries</p>}
       </div>
 
-      <Modal 
-        modal={modal}
-        setModal={setModal}
-      />
+      <Modal />
 
     </>
   );

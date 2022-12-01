@@ -10,6 +10,7 @@ const ProyectosProvider = ({children}) => {
     const [alerta, setAlerta] = useState({});
     const [loading, setLoading] = useState(false);
     const [modal, setModal] = useState(false);
+    const [tarea, setTarea] = useState({});
 
     const navigate = useNavigate();
 
@@ -169,9 +170,18 @@ const ProyectosProvider = ({children}) => {
 
     const handleModal = () => {
         setModal(!modal);
+        setTarea({});
     }
 
     const submitTask = async (task) => {
+        if(task?.id) {
+            await editTask(task);
+        } else {
+            await createTask(task);
+        }
+    }
+
+    const createTask = async (task) => {
         try {
             const token = localStorage.getItem("token");
            if (!token) return;
@@ -195,6 +205,35 @@ const ProyectosProvider = ({children}) => {
         } catch (error) {
             console.log(error)
         }
+    } 
+
+    const editTask = async (task) => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+
+           const config = {
+             headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${token}`,
+             },
+           };
+
+           const { data } = await axiosClient.put(`/tasks/${tarea.id}`, task, config);
+            
+           const updatedProject = {...proyecto};
+           updatedProject.tasks = updatedProject.tasks.map( taskState => taskState._id === data._id ? data : taskState);
+           setProyecto(updatedProject);
+           setAlerta({});
+           setModal(false);
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleModalEditTask = (task) => {
+        setTarea(task);
+        setModal(true);  
     }
 
     return (
@@ -205,12 +244,14 @@ const ProyectosProvider = ({children}) => {
           proyecto,
           loading,
           modal,
+          tarea,
           showAlert,
           submitProject,
           getProject,
           deleteProject,
           handleModal,
           submitTask,
+          handleModalEditTask,
         }}
       >
         {children}

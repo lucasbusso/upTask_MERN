@@ -1,7 +1,9 @@
+import useProyectos from "../hooks/useProyectos";
 import { dateFormatter } from "../helpers/dateFormatter";
 
 const Task = ({task}) => {
     const {description, name, priority, deadline, state, _id} = task;
+    const {handleModalEditTask} = useProyectos();
 
     return (
         <div
@@ -14,7 +16,10 @@ const Task = ({task}) => {
                 <p className="text-sm text-gray-600 mb-1">Priority: {priority}</p>
             </div>
             <div className="flex gap-2">
-                <button className="bg-indigo-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg">
+                <button 
+                    className="bg-indigo-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg"
+                    onClick={() => handleModalEditTask(task)}
+                >
                     Edit
                 </button>
                 {state ? (
