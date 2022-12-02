@@ -2,7 +2,12 @@ import Proyecto from "../models/Proyecto.js"
 import Usuario from "../models/Usuarios.js";
 
 const obtenerProyectos = async (req, res) => {
-  const proyectos = await Proyecto.find().where('creador').equals(req.usuario).select("-tasks");
+  const proyectos = await Proyecto.find({
+    '$or' : [
+      {'colaboradores': { $in: req.usuario}},
+      {'creador': { $in: req.usuario}},
+    ]
+  }).select("-tasks");
   res.json(proyectos);
 }
 
@@ -25,12 +30,12 @@ const obtenerProyecto = async (req, res) => {
 
   if (!project) {
     const error = new Error("Project not found");
-    return res.status(403).json({ msg: error.message });
+    return res.status(404).json({ msg: error.message });
   }
 
-  if (project.creador.toString() !== req.usuario._id.toString()) {
+  if (project.creador.toString() !== req.usuario._id.toString() && !project.colaboradores.some( colaborador => colaborador._id.toString() === req.usuario._id.toString())) {
     const error = new Error("Permissions error");
-    return res.status(403).json({ msg: error.message });
+    return res.status(401).json({ msg: error.message });
   }
 
   res.json( project );
