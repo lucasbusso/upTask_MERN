@@ -10,6 +10,7 @@ const ProyectosProvider = ({children}) => {
     const [alerta, setAlerta] = useState({});
     const [loading, setLoading] = useState(false);
     const [modal, setModal] = useState(false);
+    const [modalDeleteTask, setModalDeleteTask] = useState(false);
     const [tarea, setTarea] = useState({});
 
     const navigate = useNavigate();
@@ -219,7 +220,7 @@ const ProyectosProvider = ({children}) => {
              },
            };
 
-           const { data } = await axiosClient.put(`/tasks/${tarea.id}`, task, config);
+           const { data } = await axiosClient.put(`/tasks/${tarea._id}`, task, config);
             
            const updatedProject = {...proyecto};
            updatedProject.tasks = updatedProject.tasks.map( taskState => taskState._id === data._id ? data : taskState);
@@ -236,6 +237,39 @@ const ProyectosProvider = ({children}) => {
         setModal(true);  
     }
 
+    const handleModalDeleteTask = (task) => {
+        setTarea(task);
+        setModalDeleteTask(!modalDeleteTask);
+    }
+
+    const deleteTask = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+
+           const config = {
+             headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${token}`,
+             },
+           };
+
+           const { data } = await axiosClient.delete(`/tasks/${tarea._id}`, config);
+           setAlerta({
+            msg: data.msg,
+            error: false
+           });
+            
+           const updatedProject = {...proyecto};
+           updatedProject.tasks = updatedProject.tasks.filter(state => state._id !== tarea._id);
+           setProyecto(updatedProject);
+           setModalDeleteTask(false);
+           setTarea({})
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
     return (
       <ProyectosContext.Provider
         value={{
@@ -245,6 +279,7 @@ const ProyectosProvider = ({children}) => {
           loading,
           modal,
           tarea,
+          modalDeleteTask,
           showAlert,
           submitProject,
           getProject,
@@ -252,6 +287,8 @@ const ProyectosProvider = ({children}) => {
           handleModal,
           submitTask,
           handleModalEditTask,
+          handleModalDeleteTask,
+          deleteTask,
         }}
       >
         {children}

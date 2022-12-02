@@ -3,7 +3,7 @@ import { dateFormatter } from "../helpers/dateFormatter";
 
 const Task = ({task}) => {
     const {description, name, priority, deadline, state, _id} = task;
-    const {handleModalEditTask} = useProyectos();
+    const { handleModalEditTask, handleModalDeleteTask } = useProyectos();
 
     return (
         <div
@@ -31,7 +31,10 @@ const Task = ({task}) => {
                         Incomplete
                     </button>
                 )}
-                <button className="bg-red-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg">
+                <button 
+                    className="bg-red-600 px-4 py-3 text-white  uppercase font-bold text-sm rounded-lg"
+                    onClick={() => handleModalDeleteTask(task)}
+                >
                     Delete
                 </button>
             </div>

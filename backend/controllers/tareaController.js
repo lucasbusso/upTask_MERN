@@ -72,17 +72,17 @@ const eliminarTarea = async (req, res) => {
     const tarea = await Tarea.findById(id).populate("project");
 
     if(!tarea) {
-        const error = new Error("No se ha encontrado esta tarea");
+        const error = new Error("Task not found");
         return res.status(404).json({ msg: error.message });
     }
     if(tarea.project.creador.toString() !== req.usuario._id.toString()) {
-        const error = new Error("No tienes permisos para acceder a esta tarea");
+        const error = new Error("Only the author of this task can delete it");
         return res.status(403).json({ msg: error.message });
     }
 
     try {
         await tarea.deleteOne();
-        res.json({ msg: "Tarea eliminada"})
+        res.json({ msg: "Task deleted"})
     } catch (error) {
         console.log(error)
     }

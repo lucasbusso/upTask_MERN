@@ -2,18 +2,21 @@ import { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import useProyectos from "../hooks/useProyectos";
 import Modal from "../components/Modal";
+import ModalDeleteTask from "../components/ModalDeleteTask";
 import Task from "../components/Task";
+import Alerta from "../components/Alerta";
 
 const Project = () => {
   const params = useParams();
-  const { getProject, proyecto, loading, handleModal } = useProyectos();
+  const { getProject, proyecto, loading, handleModal, alerta } = useProyectos();
 
   useEffect(() => {
       getProject(params.id); 
   }, []);
 
   const { name } = proyecto;
-  
+  const { msg } = alerta;
+
   return loading ? (
     "Loading..."
   ) : (
@@ -59,6 +62,8 @@ const Project = () => {
         New task
       </button>
       
+      { msg && <Alerta alerta={alerta} />}
+
       <p className="font-bold text-xl mt-10">Project tasks</p>
       <div className="bg-white shadow mt-10 rounded-lg">
         {proyecto.tasks?.length ? 
@@ -72,6 +77,7 @@ const Project = () => {
       </div>
 
       <Modal />
+      <ModalDeleteTask />
 
     </>
   );
