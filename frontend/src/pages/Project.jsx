@@ -62,7 +62,11 @@ const Project = () => {
         New task
       </button>
       
-      { msg && <Alerta alerta={alerta} />}
+      <div className="flex justify-center">
+        <div className="w-full md:w-1/3 lg:w-1/4">
+          { msg && <Alerta alerta={alerta} />}
+        </div>
+      </div>
 
       <p className="font-bold text-xl mt-10">Project tasks</p>
       <div className="bg-white shadow mt-10 rounded-lg">
@@ -75,7 +79,17 @@ const Project = () => {
           ))
           : <p className="text-center my-5 p-10">No tasks entries</p>}
       </div>
-
+      
+      <div className="flex items-center justify-between mt-10">
+        <p className="font-bold text-xl ">Collaborators</p>
+        <Link
+          to={`/projects/add-member/${proyecto._id}`}
+          className="text-gray-400 uppercase font-semi  bold hover:text-black"
+        >
+            Add team member
+        </Link>
+      </div>
+      
       <Modal />
       <ModalDeleteTask />
 

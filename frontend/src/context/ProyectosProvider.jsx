@@ -265,9 +265,16 @@ const ProyectosProvider = ({children}) => {
            setProyecto(updatedProject);
            setModalDeleteTask(false);
            setTarea({})
+           setTimeout(() => {
+             setAlerta({})
+           }, 3000);
         } catch (error) {
             console.log(error)
         }
+    }
+
+    const submitCollaborator = async (email) => {
+        console.log(email)
     }
 
     return (
@@ -289,6 +296,7 @@ const ProyectosProvider = ({children}) => {
           handleModalEditTask,
           handleModalDeleteTask,
           deleteTask,
+          submitCollaborator,
         }}
       >
         {children}
