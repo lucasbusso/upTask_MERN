@@ -12,6 +12,8 @@ const ProyectosProvider = ({children}) => {
     const [modal, setModal] = useState(false);
     const [modalDeleteTask, setModalDeleteTask] = useState(false);
     const [tarea, setTarea] = useState({});
+    const [collaborator, setCollaborator] = useState({});
+    const [modalDeleteCollaborator, setModalDeleteCollaborator] = useState(false);
 
     const navigate = useNavigate();
 
@@ -131,7 +133,10 @@ const ProyectosProvider = ({children}) => {
            const { data } = await axiosClient.get(`/projects/${id}`, config);
            setProyecto(data)
         } catch (error) {
-            console.log(error)
+            setAlerta({
+                msg: error.response.data.msg,
+                error: true
+            })
         }
 
         setLoading(false);
@@ -274,7 +279,91 @@ const ProyectosProvider = ({children}) => {
     }
 
     const submitCollaborator = async (email) => {
-        console.log(email)
+        setLoading(true);
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+
+           const config = {
+             headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${token}`,
+             },
+           };
+
+           const { data } = await axiosClient.post(`/projects/collaborators`, {email}, config);
+           setAlerta({
+            msg: data.msg,
+            error: false
+           });
+           setCollaborator(data);
+        } catch (error) {
+            setAlerta({
+                msg: error.response.data.msg,
+                error: true
+            });
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const addCollaborator = async (email) => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+
+           const config = {
+             headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${token}`,
+             },
+           };
+
+           const { data } = await axiosClient.post(`/projects/collaborators/${proyecto._id}`, email, config);
+           setAlerta({
+            msg: data.msg,
+            error: false
+           })
+           setCollaborator({});
+           setAlerta({});
+        } catch (error) {
+            setAlerta({
+                msg: error.response.data.msg,
+                error: true
+            })
+        }
+    }
+
+    const handleModalDeleteCollaborator = (collaborator) => {
+        setModalDeleteCollaborator(!modalDeleteCollaborator);
+        setCollaborator(collaborator);
+    }
+
+    const deleteCollaborator = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+
+           const config = { 
+             headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${token}`,
+             },
+           };
+
+           const { data } = await axiosClient.post(`/projects/delete-collaborator/${proyecto._id}`, {id: collaborator._id},  config);
+           const updatedProject = {...proyecto};
+           updatedProject.colaboradores = updatedProject.colaboradores.filter( state => state._id !== collaborator._id );
+           setProyecto(updatedProject);
+           setAlerta({
+            msg: data.msg,
+            error: false
+           })
+           setCollaborator({});
+           setModalDeleteCollaborator(false);
+        } catch (error) {
+            console.log(error.response)
+        }
     }
 
     return (
@@ -287,6 +376,8 @@ const ProyectosProvider = ({children}) => {
           modal,
           tarea,
           modalDeleteTask,
+          collaborator,
+          modalDeleteCollaborator,
           showAlert,
           submitProject,
           getProject,
@@ -297,6 +388,9 @@ const ProyectosProvider = ({children}) => {
           handleModalDeleteTask,
           deleteTask,
           submitCollaborator,
+          addCollaborator,
+          handleModalDeleteCollaborator,
+          deleteCollaborator,
         }}
       >
         {children}

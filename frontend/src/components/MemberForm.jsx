@@ -24,7 +24,7 @@ const MemberForm = () => {
 
     return (
         <form
-            className="bg-white rounded-lg shadow py-10 px-5 md:w1/2"
+            className="bg-white rounded-lg shadow py-10 px-5 md:w-2/3"
             onSubmit={handleSubmit}
         >
 

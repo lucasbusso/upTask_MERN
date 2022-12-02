@@ -3,18 +3,24 @@ import { useParams, Link } from "react-router-dom";
 import useProyectos from "../hooks/useProyectos";
 import Modal from "../components/Modal";
 import ModalDeleteTask from "../components/ModalDeleteTask";
+import ModalDeleteCollaborator from "../components/modalDeleteCollaborator"
 import Task from "../components/Task";
 import Alerta from "../components/Alerta";
+import Collaborator from "../components/Collaborator";
 
 const Project = () => {
   const params = useParams();
-  const { getProject, proyecto, loading, handleModal, alerta } = useProyectos();
+  const { getProject, proyecto, loading, handleModal, showAlert, alerta } = useProyectos();
 
   useEffect(() => {
       getProject(params.id); 
   }, []);
 
-  const { name } = proyecto;
+  useEffect(() => {
+    showAlert({})
+  },[params])
+
+  const { name } = proyecto; 
   const { msg } = alerta;
 
   return loading ? (
@@ -89,9 +95,21 @@ const Project = () => {
             Add team member
         </Link>
       </div>
+
+      <div className="bg-white shadow mt-10 rounded-lg">
+        {proyecto.colaboradores?.length ? 
+          proyecto.colaboradores?.map( colab => (
+            <Collaborator 
+              key={colab._id}
+              collaborator={colab}
+            />
+          ))
+          : <p className="text-center my-5 p-10">No team members on this project</p>}
+      </div>
       
       <Modal />
       <ModalDeleteTask />
+      <ModalDeleteCollaborator />
 
     </>
   );
