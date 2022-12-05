@@ -385,7 +385,6 @@ const ProyectosProvider = ({children}) => {
            };
 
            const { data } = await axiosClient.post(`/tasks/state/${id}`, {}, config);
-           console.log(data);
 
            const updatedProject = {...proyecto};
            updatedProject.tasks = updatedProject.tasks.map( state => state._id === data._id ? data : state);
