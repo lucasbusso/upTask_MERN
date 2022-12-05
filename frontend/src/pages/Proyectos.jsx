@@ -1,12 +1,17 @@
 import useProyectos from "../hooks/useProyectos"
 import PreviewProject from "../components/PreviewProject";
+import Alerta from "../components/Alerta";
 
 const Proyectos = () => {
-  const { proyectos } = useProyectos();
+  const { proyectos, alerta } = useProyectos();
+
+  const { msg } = alerta;
 
   return (
     <>
       <h1 className="text-4xl font-bold">Projects</h1>
+
+      { msg && <Alerta alerta={alerta}/>}
 
       <div className="bg-white shadow mt-10 roundend-lg">
         {proyectos.length ?

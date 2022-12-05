@@ -44,7 +44,7 @@ const ProyectosProvider = ({children}) => {
 
         setTimeout(() => {
             setAlerta({ })
-        }, 3000);
+        }, 3500);
     }
 
     const submitProject = async (project) => {
@@ -134,10 +134,14 @@ const ProyectosProvider = ({children}) => {
            setProyecto(data);
            setAlerta({})
         } catch (error) {
+            navigate("/projects")
             setAlerta({
                 msg: error.response.data.msg,
                 error: true
             })
+            setTimeout(() => {
+                setAlerta({})
+            }, 3000);
         }
 
         setLoading(false);
@@ -270,10 +274,6 @@ const ProyectosProvider = ({children}) => {
            updatedProject.tasks = updatedProject.tasks.filter(state => state._id !== tarea._id);
            setProyecto(updatedProject);
            setModalDeleteTask(false);
-           setTarea({})
-           setTimeout(() => {
-             setAlerta({})
-           }, 3000);
         } catch (error) {
             console.log(error)
         }
@@ -372,6 +372,31 @@ const ProyectosProvider = ({children}) => {
         }
     }
 
+    const completeTask = async (id) => {
+        try {
+            const token = localStorage.getItem("token");
+            if (!token) return;
+
+           const config = {
+             headers: {
+               "Content-Type": "application/json",
+               Authorization: `Bearer ${token}`,
+             },
+           };
+
+           const { data } = await axiosClient.post(`/tasks/state/${id}`, {}, config);
+           console.log(data);
+
+           const updatedProject = {...proyecto};
+           updatedProject.tasks = updatedProject.tasks.map( state => state._id === data._id ? data : state);
+           setProyecto(updatedProject);
+           setTarea({});
+           setAlerta({});
+        } catch (error) {
+            console.log(error.response)
+        }
+    }
+
     return (
       <ProyectosContext.Provider
         value={{
@@ -397,6 +422,7 @@ const ProyectosProvider = ({children}) => {
           addCollaborator,
           handleModalDeleteCollaborator,
           deleteCollaborator,
+          completeTask,
         }}
       >
         {children}

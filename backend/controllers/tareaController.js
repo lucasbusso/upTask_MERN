@@ -81,13 +81,34 @@ const eliminarTarea = async (req, res) => {
     }
 
     try {
-        await tarea.deleteOne();
+        const project = await Proyecto.findById(tarea.project);
+        project.tasks.pull(tarea._id);
+
+        await Promise.allSettled([await project.save(), await tarea.deleteOne()])
+
         res.json({ msg: "Task deleted"})
     } catch (error) {
         console.log(error)
     }
 };
-const cambiarEstado = async (req, res) => {};
+const cambiarEstado = async (req, res) => {
+    const { id } = req.params;
+    const tarea = await Tarea.findById(id).populate("project");
+
+    if(!tarea) {
+        const error = new Error("Task not found");
+        return res.status(404).json({ msg: error.message });
+    }
+
+    if(tarea.project.creador.toString() !== req.usuario._id.toString() && !tarea.project.colaboradores.some((colaborador)  => colaborador._id.toString() === req.usuario._id.toString())) {
+        const error = new Error("Only the author of this task can delete it");
+        return res.status(403).json({ msg: error.message });
+    }
+
+    tarea.state = !tarea.state;
+    await tarea.save();
+    res.json(tarea);
+};
 
 export {
     agregarTarea,

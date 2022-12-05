@@ -4,7 +4,7 @@ import { dateFormatter } from "../helpers/dateFormatter";
 
 const Task = ({task}) => {
     const {description, name, priority, deadline, state, _id} = task;
-    const { handleModalEditTask, handleModalDeleteTask } = useProyectos();
+    const { handleModalEditTask, handleModalDeleteTask, completeTask } = useProyectos();
     const admin = useAdmin();
 
     return (
@@ -26,15 +26,11 @@ const Task = ({task}) => {
                         Edit
                     </button>
                 }
-                {state ? (
-                    <button className="bg-sky-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg">
-                        Complete
-                    </button>
-                ) : (
-                    <button className="bg-gray-600 px-4 py-3 text-white uppercase font-bold text-sm rounded-lg">
-                        Incomplete
-                    </button>
-                )}
+                <button 
+                    className={`${state ? 'bg-sky-600' : 'bg-gray-600'} px-4 py-3 text-white uppercase font-bold text-sm rounded-lg`}
+                    onClick={() => completeTask (_id)}
+                >{state ? 'Complete' :  'Incomplete'}
+                </button>
                 {admin && 
                     <button 
                     className="bg-red-600 px-4 py-3 text-white  uppercase font-bold text-sm rounded-lg"
