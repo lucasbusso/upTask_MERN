@@ -22,17 +22,17 @@ const NewCollaborator = () => {
                 className="underline"
             >{proyecto.name}</Link>
             </span>
-            <div className="mt-10 flex justify-center">
+            <div className="mt-10 md:flex justify-center w-full">
                 <MemberForm />
             </div>
 
             {loading ? <p className="text-center mt-20">Loading...</p> : collaborator?._id && (
-                <div className="flex justify-center mt-10">
-                    <div className="bg-white py-10 px-5 md:w-2/3 rounded shadow">
+                <div className="flex justify-center mt-10 w-full">
+                    <div className="bg-white py-10 px-5 w-full md:w-2/3 rounded shadow">
                         <h2 className="text-center mb-10 text-2xl font-bold">Results:</h2>
 
-                        <div className="flex justify-between items-center">
-                            <p>{collaborator.name}</p>
+                        <div className="flex flex-col md:flex-row justify-between items-center">
+                            <p className="mb-5 md:mb-0">{collaborator.name}</p>
                             <button
                                 type="button"
                                 className="bg-slate-500 px-5 py-2 rounded-lg uppercase text-white font-bold text-sm"
