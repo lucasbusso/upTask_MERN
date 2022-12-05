@@ -1,6 +1,9 @@
-import { Link } from "react-router-dom"
+import { Link } from "react-router-dom";
+import useProyectos from "../hooks/useProyectos";
+import Finder from "./Finder"
 
 const Header = () => {
+    const { handleFinder } = useProyectos();
   return (
     <header className="px-4 py-5 bg-white border-b ">
         <div className="md:flex md:justify-between">
@@ -10,6 +13,7 @@ const Header = () => {
                 <button 
                     type="button"
                     className="font-bold uppercase"
+                    onClick={handleFinder}
                 >Find project</button>
                 <Link 
                     to="/projects"
@@ -23,6 +27,8 @@ const Header = () => {
                 >
                     Sign off
                 </button>
+
+                <Finder />
             </div>
         </div>
     </header>

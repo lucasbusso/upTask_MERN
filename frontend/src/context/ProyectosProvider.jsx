@@ -14,6 +14,7 @@ const ProyectosProvider = ({children}) => {
     const [tarea, setTarea] = useState({});
     const [collaborator, setCollaborator] = useState({});
     const [modalDeleteCollaborator, setModalDeleteCollaborator] = useState(false);
+    const [finder, setFinder] = useState(false);
 
     const navigate = useNavigate();
 
@@ -396,6 +397,10 @@ const ProyectosProvider = ({children}) => {
         }
     }
 
+    const handleFinder = () => {
+        setFinder(!finder);
+    }
+
     return (
       <ProyectosContext.Provider
         value={{
@@ -408,6 +413,7 @@ const ProyectosProvider = ({children}) => {
           modalDeleteTask,
           collaborator,
           modalDeleteCollaborator,
+          finder,
           showAlert,
           submitProject,
           getProject,
@@ -422,6 +428,7 @@ const ProyectosProvider = ({children}) => {
           handleModalDeleteCollaborator,
           deleteCollaborator,
           completeTask,
+          handleFinder,
         }}
       >
         {children}
