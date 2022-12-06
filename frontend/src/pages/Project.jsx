@@ -6,28 +6,61 @@ import Modal from "../components/Modal";
 import ModalDeleteTask from "../components/ModalDeleteTask";
 import ModalDeleteCollaborator from "../components/modalDeleteCollaborator"
 import Task from "../components/Task";
-import Alerta from "../components/Alerta";
 import Collaborator from "../components/Collaborator";
+import io from "socket.io-client"
+
+let socket; 
 
 const Project = () => {
   const params = useParams();
   const admin  = useAdmin();
-  const { getProject, proyecto, loading, handleModal, showAlert, alerta } = useProyectos();
+  const { getProject, proyecto, loading, handleModal, showAlert, alerta, submitTaskSocket, deleteTaskSocket, updateTaskSocket, updateStateSocket } = useProyectos();
+
+  useEffect(() => {
+    showAlert({})
+  },[params])
+  
 
   useEffect(() => {
       getProject(params.id); 
   }, []);
 
   useEffect(() => {
-    showAlert({})
-  },[params])
+    socket = io(import.meta.env.VITE_BACKEND_URL);
+    socket.emit('open project', params.id);
+  }, [])
+
+  useEffect(() => {
+    socket.on('task added', (newTask) => {
+      if(newTask.project === proyecto._id) {
+        submitTaskSocket(newTask) 
+      }
+    })
+
+    socket.on('task deleted', (taskDeleted) => {
+      if(taskDeleted.project === proyecto._id) {
+        deleteTaskSocket(taskDeleted)
+      }
+    })
+
+    socket.on('task updeted', (taskUpdated) => {
+      if(taskUpdated.project._id === proyecto._id){
+        updateTaskSocket(taskUpdated);
+      }
+    })
+
+    socket.on('state changed', (newState) => {
+      if(newState.project._id === proyecto._id){
+        updateStateSocket(newState);
+      }
+    })
+  })
 
   const { name } = proyecto; 
   const { msg } = alerta;
 
-  return loading ? (
-    "Loading..."
-  ) : (
+  if(loading) return 'Loading...'
+  return (
       <>
         <div className="flex justify-between">
           <h1 className="font-black text-4xl">{name}</h1>

@@ -1,6 +1,9 @@
 import { useState, useEffect, createContext } from "react"
 import axiosClient from "../config/AxiosClient"
 import { useNavigate } from "react-router-dom"
+import io from "socket.io-client"
+
+let socket;
 
 const ProyectosContext = createContext();
 
@@ -38,6 +41,10 @@ const ProyectosProvider = ({children}) => {
             }
         }
         getProjects()
+    }, [])
+
+    useEffect(() => {
+        socket = io(import.meta.env.VITE_BACKEND_URL);
     }, [])
 
     const showAlert = (alerta) => {
@@ -207,13 +214,11 @@ const ProyectosProvider = ({children}) => {
 
            const { data } = await axiosClient.post("/tasks", task, config);
 
-           //Add task to the state
-           const updatedProject = {...proyecto};
-           updatedProject.tasks = [...proyecto.tasks, data];
-
-           setProyecto(updatedProject);
            setAlerta({});
            setModal(false);
+
+           // socket io
+           socket.emit('new task', data)
         } catch (error) {
             console.log(error)
         }
@@ -231,13 +236,11 @@ const ProyectosProvider = ({children}) => {
              },
            };
 
-           const { data } = await axiosClient.put(`/tasks/${tarea._id}`, task, config);
-            
-           const updatedProject = {...proyecto};
-           updatedProject.tasks = updatedProject.tasks.map( taskState => taskState._id === data._id ? data : taskState);
-           setProyecto(updatedProject);
+           const { data } = await axiosClient.put(`/tasks/${task.id}`, task, config);        
            setAlerta({});
            setModal(false);
+
+           socket.emit('update task', data);
         } catch (error) {
             console.log(error)
         }
@@ -271,10 +274,14 @@ const ProyectosProvider = ({children}) => {
             error: false
            });
             
-           const updatedProject = {...proyecto};
-           updatedProject.tasks = updatedProject.tasks.filter(state => state._id !== tarea._id);
-           setProyecto(updatedProject);
            setModalDeleteTask(false);
+           setTarea({})
+           setTimeout(() => {
+            setAlerta({})
+           }, 3000);
+
+           socket.emit('delete task', tarea)
+
         } catch (error) {
             console.log(error)
         }
@@ -387,11 +394,10 @@ const ProyectosProvider = ({children}) => {
 
            const { data } = await axiosClient.post(`/tasks/state/${id}`, {}, config);
 
-           const updatedProject = {...proyecto};
-           updatedProject.tasks = updatedProject.tasks.map( state => state._id === data._id ? data : state);
-           setProyecto(updatedProject);
            setTarea({});
            setAlerta({});
+
+           socket.emit('chande state', data);
         } catch (error) {
             console.log(error.response)
         }
@@ -399,6 +405,30 @@ const ProyectosProvider = ({children}) => {
 
     const handleFinder = () => {
         setFinder(!finder);
+    }
+
+    const submitTaskSocket = (task) => {
+        const updatedProject = {...proyecto};
+        updatedProject.tasks = [...updatedProject.tasks, task];
+        setProyecto(updatedProject); 
+    }
+
+    const deleteTaskSocket = (task) => {
+        const updatedProject = {...proyecto};
+        updatedProject.tasks = updatedProject.tasks.filter( state => state._id !== task._id);
+        setProyecto(updatedProject)
+    }
+
+    const updateTaskSocket = (task) => {
+        const updatedProject = {...proyecto};
+        updatedProject.tasks = updatedProject.tasks.map( state => state._id === task._id ? task : state);
+        setProyecto(updatedProject);
+    }
+
+    const updateStateSocket = (task) => {
+        const updatedProject = {...proyecto};
+        updatedProject.tasks = updatedProject.tasks.map( state => state._id === task._id ? task : state);
+        setProyecto(updatedProject);
     }
 
     return (
@@ -429,6 +459,10 @@ const ProyectosProvider = ({children}) => {
           deleteCollaborator,
           completeTask,
           handleFinder,
+          submitTaskSocket,
+          deleteTaskSocket,
+          updateTaskSocket,
+          updateStateSocket,
         }}
       >
         {children}

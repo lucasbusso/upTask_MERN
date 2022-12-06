@@ -101,7 +101,7 @@ const cambiarEstado = async (req, res) => {
     }
 
     if(tarea.project.creador.toString() !== req.usuario._id.toString() && !tarea.project.colaboradores.some((colaborador)  => colaborador._id.toString() === req.usuario._id.toString())) {
-        const error = new Error("Only the author of this task can delete it");
+        const error = new Error("Invalid action");
         return res.status(403).json({ msg: error.message });
     }
 
